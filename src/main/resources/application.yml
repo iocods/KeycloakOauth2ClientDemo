@@ -7,7 +7,6 @@ spring.security.oauth2.client:
     authorization-grant-type: authorization_code
     scope: openid
     redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
-#    issuer-uri: ${ISSUER_URI:http://localhost:8080/realms/SpringBootKeyCloakApp}
     user-name-attribute: preferred_username
   provider:
     keycloak:

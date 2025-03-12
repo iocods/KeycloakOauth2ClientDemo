@@ -1,4 +1,6 @@
 package com.iocode.web.components;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
@@ -12,6 +14,8 @@ import java.util.*;
 @Service
 public class CustomOidcUserService extends OidcUserService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomOidcUserService.class);
+
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) {
         // ✅ Delegate to the default OidcUserService to load the user
@@ -20,25 +24,8 @@ public class CustomOidcUserService extends OidcUserService {
         // ✅ Extract roles/authorities from the token
         Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
-        // 🔹 Extract 'realm_access.roles'
-        Map<String, Object> realmAccess = oidcUser.getAttribute("realm_access");
-        if (realmAccess != null && realmAccess.containsKey("roles")) {
-            List<String> roles = (List<String>) realmAccess.get("roles");
-            roles.forEach(role -> mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())));
-        }
-
-        // 🔹 Extract 'resource_access.spring_oauth2.roles'
-        Map<String, Object> resourceAccess = oidcUser.getAttribute("resource_access");
-        if (resourceAccess != null && resourceAccess.containsKey("spring_oauth2")) {
-            Map<String, Object> clientRoles = (Map<String, Object>) resourceAccess.get("spring_oauth2");
-            if (clientRoles.containsKey("roles")) {
-                List<String> roles = (List<String>) clientRoles.get("roles");
-                roles.forEach(role -> mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase())));
-            }
-        }
-
-        // 🔹 Extract 'authorities' claim if available
         List<String> authoritiesClaim = oidcUser.getAttribute("authorities");
+        log.info("Authorities: {}", authoritiesClaim);
         if (authoritiesClaim != null) {
             authoritiesClaim.forEach(auth -> mappedAuthorities.add(new SimpleGrantedAuthority(auth.toUpperCase())));
         }
