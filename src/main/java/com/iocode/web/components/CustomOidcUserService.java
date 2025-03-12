@@ -25,7 +25,6 @@ public class CustomOidcUserService extends OidcUserService {
         Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
         List<String> authoritiesClaim = oidcUser.getAttribute("authorities");
-        log.info("Authorities: {}", authoritiesClaim);
         if (authoritiesClaim != null) {
             authoritiesClaim.forEach(auth -> mappedAuthorities.add(new SimpleGrantedAuthority(auth.toUpperCase())));
         }

@@ -23,7 +23,7 @@ public class DemoController {
     }
 
     @GetMapping("/persons")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Person> demo(@RequestParam(required = false) String param, Authentication auth) {
         log.info("List of User Roles and authorities {}", auth.getAuthorities());
         return List.of(new Person("John Doe", 30, "johndoe@example.com"));
