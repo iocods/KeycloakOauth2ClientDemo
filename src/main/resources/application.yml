@@ -1,1 +1,14 @@
-spring.application.name=OAuth2ClientDemo
+server.port: 8081
+spring.application.name: OAuth2ClientDemo
+spring.security.oauth2.client:
+  registration.keycloak:
+    provider: keycloak
+    client-id: ${CLIENT_ID:spring_oauth2}
+    authorization-grant-type: authorization_code
+    scope: openid
+    redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+#    issuer-uri: ${ISSUER_URI:http://localhost:8080/realms/SpringBootKeyCloakApp}
+    user-name-attribute: preferred_username
+  provider:
+    keycloak:
+      issuer-uri: http://localhost:8080/realms/SpringBootKeyCloakApp
